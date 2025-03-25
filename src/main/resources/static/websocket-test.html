@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<h2>WebSocket Chat Test</h2>
+
+<div>
+    <label>Room ID: </label>
+    <input type="text" id="roomId" placeholder="Enter Room ID" />
+    <button onclick="connect()">Connect</button>
+</div>
+
+<div>
+    <label>Message: </label>
+    <input type="text" id="messageInput" placeholder="Enter your message" />
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<h3>Messages:</h3>
+<ul id="messages"></ul>
+
+<script>
+    let stompClient = null;
+    let isConnected = false;
+    let roomId = null;
+
+    function connect() {
+        roomId = document.getElementById("roomId").value.trim();
+        if (!roomId) {
+            alert("Please enter a Room ID");
+            return;
+        }
+
+        const socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function (frame) {
+            console.log('Connected: ' + frame);
+            isConnected = true;
+
+            stompClient.subscribe(`/topic/chat/${roomId}`, function (message) {
+                showMessage(JSON.parse(message.body).message);
+            });
+
+            alert(`Connected to room: ${roomId}`);
+        }, function (error) {
+            console.error("WebSocket connection error: ", error);
+            alert("WebSocket connection failed!");
+        });
+    }
+
+    function sendMessage() {
+        if (!isConnected || !stompClient) {
+            alert("Please connect first!");
+            return;
+        }
+
+        let messageContent = document.getElementById("messageInput").value.trim();
+        if (messageContent !== "") {
+            let message = { message: messageContent };
+            stompClient.send(`/app/chat/${roomId}`, {}, JSON.stringify(message));
+            document.getElementById("messageInput").value = "";
+        }
+    }
+
+    function showMessage(message) {
+        let messagesList = document.getElementById("messages");
+        let li = document.createElement("li");
+        li.appendChild(document.createTextNode(message));
+        messagesList.appendChild(li);
+    }
+</script>
+</body>
+</html>
