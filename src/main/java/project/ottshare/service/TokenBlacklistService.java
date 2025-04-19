@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Slf4j
 public class TokenBlacklistService {
+
     private final RedisTemplate<String, Object> redisTemplate;
     private static final String BLACKLIST_PREFIX = "blacklist:";
 

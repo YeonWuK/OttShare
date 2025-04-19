@@ -20,6 +20,7 @@ import project.ottshare.security.auth.JwtTokenProvider;
 @Slf4j
 @Transactional(readOnly = true)
 public class UserService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;

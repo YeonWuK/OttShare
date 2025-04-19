@@ -36,6 +36,23 @@ services:
     networks:
       - spring-boot-network
 
+  spring-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring-app-container
+    restart: always
+    depends_on:
+      - mysql
+      - redis
+      - rabbitmq
+    ports:
+      - "8080:8080"
+    networks:
+      - spring-boot-network
+
+depends_on:
+  - mysql
 
 volumes:
   mysql_data:

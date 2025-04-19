@@ -3,7 +3,7 @@ spring:
     name: ottShare
 
   datasource:
-    url: jdbc:mysql://localhost:3306/ottShare?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://mysql-container:3306/ottShare?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -15,33 +15,33 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
-        show_sql: true  # SQL 쿼리 로그 출력 (선택)
-        use_sql_comments: true  # SQL 주석 표시 (선택)
-        type: trace  # 바인딩된 파라미터 값 출력 (선택)
+        show_sql: true
+        use_sql_comments: true
+        type: trace
 
   data:
     redis:
-      host: localhost
+      host: redis
       port: 6379
 
   rabbitmq:
-    host: rabbitmq-container  # Docker 컨테이너명으로 변경
+    host: rabbitmq
     port: 5672
     username: guest
     password: guest
     virtual-host: /
 
     queue:
-      name: chat.queue  # 사용할 queue 이름
+      name: chat.queue
     exchange:
-      name: chat.exchange  # 사용할 exchange 이름
+      name: chat.exchange
     routing:
-      key: chat.key  # 라우팅 키 설정
+      key: chat.key
 
 server:
   port: 8080
 
 jwt:
   secret: MTQyQUQzMzEzRTY4QjY1NzhGMTM1QjMyQzFBNzg1QUJDREUxMjM0NTY3ODkwMTIzNDU=
-  expiration: 3600000  # Access Token 만료 시간 (1시간)
-  refreshExpiration: 86400000  # Refresh Token 만료 시간 (24시간)
+  expiration: 3600000
+  refreshExpiration: 86400000
