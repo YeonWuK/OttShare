@@ -13,7 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.ottshare.dto.userDto.*;
-import project.ottshare.repository.UserRepository;
 import project.ottshare.security.auth.CustomUserDetails;
 import project.ottshare.security.auth.JwtTokenProvider;
 import project.ottshare.service.TokenBlacklistService;

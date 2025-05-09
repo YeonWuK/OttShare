@@ -1,61 +1,78 @@
+version: '3.8'
+
 services:
-  mysql:
-    image: mysql:8.0
+  app:
+    platform: linux/arm64
+    build: .
+    container_name: ottshare-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      mysql-container:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      JAVA_TOOL_OPTIONS: "-Dmanagement.metrics.binders.processor=false"
+    networks:
+      - ottshare-net
+
+  mysql-container:
+    image: mysql:8
     container_name: mysql-container
     restart: always
+    ports:
+      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: ottShare
-    ports:
-      - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
     networks:
-      - spring-boot-network
+      - ottshare-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:latest
-    container_name: redis-container
-    restart: always
+    container_name: redis
     ports:
       - "6379:6379"
     networks:
-      - spring-boot-network
+      - ottshare-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   rabbitmq:
     image: rabbitmq:3-management
-    container_name: rabbitmq-container
-    restart: always
+    container_name: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
-      RABBITMQ_DEFAULT_VHOST: /
     networks:
-      - spring-boot-network
-
-  spring-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: spring-app-container
-    restart: always
-    depends_on:
-      - mysql
-      - redis
-      - rabbitmq
-    ports:
-      - "8080:8080"
-    networks:
-      - spring-boot-network
-
-depends_on:
-  - mysql
+      - ottshare-net
+    healthcheck:
+      test: [ "CMD-SHELL", "rabbitmq-diagnostics -q ping || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
-  mysql_data:
+  mysql-data:
 
 networks:
-  spring-boot-network:
+  ottshare-net:
+    name: ottshare-net   # 여기서 명확하게 이름 지정
+    driver: bridge

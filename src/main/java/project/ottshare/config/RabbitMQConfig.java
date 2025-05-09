@@ -14,6 +14,18 @@ import org.springframework.context.annotation.Configuration;
 @EnableRabbit
 public class RabbitMQConfig {
 
+    @Value("${spring.rabbitmq.host}")
+    private String host;
+
+    @Value("${spring.rabbitmq.port}")
+    private int port;
+
+    @Value("${spring.rabbitmq.username}")
+    private String username;
+
+    @Value("${spring.rabbitmq.password}")
+    private String password;
+
     @Value("${spring.rabbitmq.queue.name}")
     private String queueName;
 
@@ -44,12 +56,10 @@ public class RabbitMQConfig {
      **/
     @Bean
     public CachingConnectionFactory connectionFactory() {
-        CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
-//        connectionFactory.setHost(rabbitMqProperties.getHost());
-//        connectionFactory.setPort(rabbitMqProperties.getPort());
-//        connectionFactory.setUsername(rabbitMqProperties.getUsername());
-//        connectionFactory.setPassword(rabbitMqProperties.getPassword());
-        return connectionFactory;
+        CachingConnectionFactory cf = new CachingConnectionFactory(host, port);
+        cf.setUsername(username);
+        cf.setPassword(password);
+        return cf;
     }
 
     /**

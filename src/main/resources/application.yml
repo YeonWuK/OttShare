@@ -3,7 +3,7 @@ spring:
     name: ottShare
 
   datasource:
-    url: jdbc:mysql://mysql-container:3306/ottShare?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://mysql-container:3306/ottShare
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -16,8 +16,6 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
         show_sql: true
-        use_sql_comments: true
-        type: trace
 
   data:
     redis:
@@ -29,17 +27,17 @@ spring:
     port: 5672
     username: guest
     password: guest
-    virtual-host: /
-
     queue:
       name: chat.queue
     exchange:
       name: chat.exchange
-    routing:
-      key: chat.key
+
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.actuate.autoconfigure.metrics.MetricsAutoConfiguration
 
 server:
-  port: 8080
+  port: 8081
 
 jwt:
   secret: MTQyQUQzMzEzRTY4QjY1NzhGMTM1QjMyQzFBNzg1QUJDREUxMjM0NTY3ODkwMTIzNDU=
