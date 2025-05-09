@@ -37,7 +37,7 @@ spring:
       - org.springframework.boot.actuate.autoconfigure.metrics.MetricsAutoConfiguration
 
 server:
-  port: 8081
+  port: 8080
 
 jwt:
   secret: MTQyQUQzMzEzRTY4QjY1NzhGMTM1QjMyQzFBNzg1QUJDREUxMjM0NTY3ODkwMTIzNDU=
