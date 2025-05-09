@@ -1,5 +1,5 @@
 # 1단계: 빌드 스테이지
-FROM --platform=linux/amd64 gradle:7.6-jdk17 AS build
+FROM gradle:7.6-jdk17 AS build
 WORKDIR /app
 COPY . .
 RUN gradle clean bootJar
