@@ -43,8 +43,8 @@ public class CustomValidators {
     @Component
     @RequiredArgsConstructor
     public static class UsernameJoinValidator extends AbstractValidator<UserRequestDto> {
+        private final UserRepository userRepository;
 
-        UserRepository userRepository;
         @Override
         protected void doValidate(UserRequestDto dto, Errors errors) {
             if (userRepository.existsByUsername(dto.getUsername())) {
@@ -59,8 +59,8 @@ public class CustomValidators {
     @Component
     @RequiredArgsConstructor
     public static class NicknameJoinValidator extends AbstractValidator<UserRequestDto> {
+        private final UserRepository userRepository;
 
-        UserRepository userRepository;
         @Override
         protected void doValidate(UserRequestDto dto, Errors errors) {
             if (userRepository.existsByUsername(dto.getNickname())) {
@@ -75,7 +75,7 @@ public class CustomValidators {
     @Component
     @RequiredArgsConstructor
     public static class UsernameModifyValidator extends AbstractValidator<UpdateUserDto> {
-        UserRepository userRepository;
+        private final UserRepository userRepository;
 
         @Override
         protected void doValidate(UpdateUserDto dto, Errors errors) {
@@ -97,7 +97,7 @@ public class CustomValidators {
     @Component
     @RequiredArgsConstructor
     public static class UserNicknameModifyValidator extends AbstractValidator<UpdateUserDto> {
-        UserRepository userRepository;
+        private final UserRepository userRepository;
 
         String currentNickname = getCurrentNickname();
         @Override
