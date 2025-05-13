@@ -13,8 +13,6 @@ import project.ottshare.validation.ValidationGroups;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WaitingUserRequestDto {
-    @NotBlank(message = "회원 정보 누락되었습니다.", groups = ValidationGroups.NotBlankGroups.class)
-    private Long userId;
 
     @NotBlank(message = "ottType은 필수입니다.", groups = ValidationGroups.NotBlankGroups.class)
     private OttType ottType;

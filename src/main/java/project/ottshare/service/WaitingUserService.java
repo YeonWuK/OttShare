@@ -30,9 +30,9 @@ public class WaitingUserService {
      * user 저장
      */
     @Transactional
-    public void createWaitingUser(WaitingUserRequestDto waitingUserRequestDTO) {
-        User user = userRepository.findById(waitingUserRequestDTO.getUserId())
-                .orElseThrow(() -> new UserNotFoundException(waitingUserRequestDTO.getUserId()));
+    public void createWaitingUser(Long userId, WaitingUserRequestDto waitingUserRequestDTO) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
 
         WaitingUser waitingUser =  WaitingUser.from(waitingUserRequestDTO, user);
         waitingUserRepository.save(waitingUser);

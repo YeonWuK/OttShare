@@ -33,10 +33,11 @@ public class WaitingUserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createOttShareRoom(@RequestBody WaitingUserRequestDto waitingUserRequestDTO) throws Exception {
+    public ResponseEntity<String> createOttShareRoom(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                     @RequestBody WaitingUserRequestDto waitingUserRequestDTO) throws Exception {
         log.info("✅ isLeader Value: {}", waitingUserRequestDTO.isLeader());
 
-        waitingUserService.createWaitingUser(waitingUserRequestDTO);
+        waitingUserService.createWaitingUser(customUserDetails.userId(), waitingUserRequestDTO);
 
         WaitingUserResponseDto leaderByOtt = waitingUserService.getLeaderByOtt(waitingUserRequestDTO.getOttType());
         List<WaitingUserResponseDto> members = waitingUserService.NonLeaderByOtt(waitingUserRequestDTO.getOttType());
