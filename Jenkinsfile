@@ -13,7 +13,7 @@ pipeline {
             steps {
                 echo "🐳 Docker Compose 다운 → 빌드 → 재기동..."
                 sh '''
-                docker-compose down -v || true
+                docker-compose down || true
                 docker-compose build
                 docker-compose up -d
                 '''

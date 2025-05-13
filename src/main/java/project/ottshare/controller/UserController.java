@@ -154,10 +154,8 @@ public class UserController {
         }
 
         String accessToken = jwtTokenProvider.generateToken(username);
-        TokenResponse tokenResponse = new TokenResponse(accessToken);
-
         response.setHeader("Authorization", "Bearer " + accessToken);
 
-        return ResponseEntity.ok("access_token : "+ tokenResponse);
+        return ResponseEntity.ok(Map.of("accessToken", accessToken));
     }
 }
