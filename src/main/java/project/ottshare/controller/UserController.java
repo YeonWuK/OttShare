@@ -127,7 +127,7 @@ public class UserController {
     /**
      *  accessToken 재발급
      */
-    @PostMapping("/access-token")
+    @PostMapping("/reissue")
     public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         Cookie[] cookies = request.getCookies();
         if (cookies == null) {
@@ -154,8 +154,10 @@ public class UserController {
         }
 
         String accessToken = jwtTokenProvider.generateToken(username);
+        TokenResponse tokenResponse = new TokenResponse(accessToken);
+
         response.setHeader("Authorization", "Bearer " + accessToken);
 
-        return ResponseEntity.ok(Map.of("accessToken", accessToken));
+        return ResponseEntity.ok("access_token : "+ tokenResponse);
     }
 }
