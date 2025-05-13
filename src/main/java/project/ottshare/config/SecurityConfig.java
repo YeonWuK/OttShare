@@ -37,7 +37,7 @@ public class SecurityConfig {
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/login", "/api/user/register", "/api/user/access-token", "/api/user/find-password").permitAll() // ✅ 로그인 & 회원가입은 인증 없이 허용
+                        .requestMatchers("/api/auth/login", "/api/user/register", "/api/user/reissue", "/api/user/find-password").permitAll() // ✅ 로그인 & 회원가입은 인증 없이 허용
                         .requestMatchers("/ws/**", "/ws").permitAll()  // ✅ WebSocket 요청 허용
                         .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
                 );
