@@ -32,6 +32,7 @@ public class WaitingUserController {
         return ResponseEntity.ok("delete waiting user");
     }
 
+    //해당 부분 성능 향상 필요성
     @PostMapping
     public ResponseEntity<String> createOttShareRoom(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                                      @RequestBody WaitingUserRequestDto waitingUserRequestDTO) throws Exception {

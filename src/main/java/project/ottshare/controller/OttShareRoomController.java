@@ -68,8 +68,10 @@ public class OttShareRoomController {
     /**
      * 체크
      */
-    @PostMapping("/{room-id}/users/{user-id}/check")
-    public ResponseEntity<?> checkUserInRoom(@PathVariable("room-id") Long roomId, @PathVariable("user-id") Long userId) {
+    @PostMapping("{room-id}/check")
+    public ResponseEntity<?> checkUserInRoom(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                             @PathVariable("room-id") Long roomId) {
+        Long userId = customUserDetails.userId();
         log.info("Checking if roomId: {}, userId: {}", roomId, userId);
 
         ottShareRoomService.checkUserInRoom(roomId, userId);
