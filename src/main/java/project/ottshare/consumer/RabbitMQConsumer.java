@@ -23,7 +23,7 @@ public class RabbitMQConsumer {
     private final SharingUserRepository sharingUserRepository;
     private final OttShareRoomRepository ottShareRoomRepository;
 
-    @RabbitListener(queues = "#{@queueNameProvider.getQueueNames()}")
+    @RabbitListener(queues = "chat.queue")
     public void consumeMessage(MessageRequestDto message) {
 
         SharingUser sharingUser = sharingUserRepository.findByUserId(message.getSharingUserId()).orElseThrow(() ->
