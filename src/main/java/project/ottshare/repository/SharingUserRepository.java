@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface SharingUserRepository extends JpaRepository<SharingUser, Long>, SharingUserRepositoryCustom {
     Optional<SharingUser> findByUserId(Long userId);
     Optional<SharingUser> findUserByOttShareRoomIdAndUserId(Long roomId, Long userId);
-    boolean isSharingUserByUserId(Long userId);
+    boolean existsByUserId(Long userId);
 }

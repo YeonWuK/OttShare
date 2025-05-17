@@ -54,6 +54,6 @@ public class SharingUserService {
      * 로그인한 userId 에서 Sharing중인지 여부 체크
      */
     public boolean is_sharingUser(Long userId) {
-        return sharingUserRepository.isSharingUserByUserId(userId);
+        return sharingUserRepository.existsByUserId(userId);
     }
 }
