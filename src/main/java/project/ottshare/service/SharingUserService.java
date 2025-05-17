@@ -7,6 +7,7 @@ import project.ottshare.dto.ottShareRoomDto.OttShareRoomRequestDto;
 import project.ottshare.dto.sharingUserDto.SharingUserResponseDto;
 import project.ottshare.entity.SharingUser;
 import project.ottshare.entity.User;
+import project.ottshare.exception.SharingUserNotFoundException;
 import project.ottshare.exception.UserNotFoundException;
 import project.ottshare.repository.SharingUserRepository;
 import project.ottshare.repository.UserRepository;
@@ -48,4 +49,11 @@ public class SharingUserService {
     }
 
 
+
+    /**
+     * 로그인한 userId 에서 Sharing중인지 여부 체크
+     */
+    public boolean is_sharingUser(Long userId) {
+        return sharingUserRepository.isSharingUserByUserId(userId);
+    }
 }

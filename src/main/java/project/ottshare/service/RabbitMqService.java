@@ -13,13 +13,11 @@ public class RabbitMqService {
 
     private final RabbitTemplate rabbitTemplate;
 
-    public void sendMessage(String exchangeName, MessageRequestDto message, Long roomId) {
+    public void sendMessage(String exchangeName, MessageRequestDto message, Long roomId, Long userId) {
         String routingKey = "chat.room." + roomId;
-        log.info("Sending message to RabbitMQ | Exchange: {} | RoutingKey: {} | Message: {} | RoomId: {}",
-                exchangeName, routingKey, message, roomId);
+        log.info("Sending message to RabbitMQ | Exchange: {} | RoutingKey: {} | Message: {} | RoomId: {} | userId : {}",
+                exchangeName, routingKey, message, roomId, userId);
 
         rabbitTemplate.convertAndSend(exchangeName, routingKey, message);
     }
-
-
 }

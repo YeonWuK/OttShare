@@ -7,3 +7,5 @@ public class OttLeaderNotFoundException extends RuntimeException {
         super(ott + "에 대한 리더를 찾을 수 없습니다.");
     }
 }
+
+
