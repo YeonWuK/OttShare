@@ -38,3 +38,8 @@ out/
 
 ### macOS ###
 .DS_Store
+
+.env
+
+# 공개용 예시 파일
+!env/.env.example
