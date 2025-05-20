@@ -44,7 +44,7 @@ public class SecurityConfig {
         JwtLoginAuthenticationFilter jwtAuthenticationFilter = new JwtLoginAuthenticationFilter(authenticationManager, jwtTokenProvider, tokenBlacklistService, redisTemplate);
 
         http.csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ✅ preflight 완전 허용
                         .requestMatchers("/api/auth/login", "/api/user/register", "/api/user/reissue", "/api/user/find-password").permitAll()
@@ -74,7 +74,8 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOriginPatterns(List.of(
                 "http://13.124.190.188:5137",
-                "http://13.124.190.188:3000"
+                "http://13.124.190.188:3000",
+                "http://localhost:5137"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
@@ -84,6 +85,4 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", config);
         return source;
     }
-
-
 }
