@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -45,9 +46,10 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/login", "/api/user/register", "/api/user/reissue", "/api/user/find-password").permitAll() // ✅ 로그인 & 회원가입은 인증 없이 허용
-                        .requestMatchers("/ws/**", "/ws").permitAll()  // ✅ WebSocket 요청 허용
-                        .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ✅ preflight 완전 허용
+                        .requestMatchers("/api/auth/login", "/api/user/register", "/api/user/reissue", "/api/user/find-password").permitAll()
+                        .requestMatchers("/ws/**", "/ws").permitAll()
+                        .anyRequest().authenticated()
                 );
 
         http.logout(AbstractHttpConfigurer::disable);
@@ -70,16 +72,18 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of(
-                "http://13.124.190.188:3000",
-                "http://13.124.190.188:5137"
+        config.setAllowedOriginPatterns(List.of(
+                "http://13.124.190.188:5137",
+                "http://13.124.190.188:3000"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
     }
+
 
 }
