@@ -88,6 +88,9 @@ public class UserService {
     //회원 검증
     public User findUserForPasswordReset(String name, String username, String email) {
         return userRepository.findByNameAndUsernameAndEmail(name, username, email)
-                .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> {
+                    log.warn("❌ 비밀번호 찾기 실패 - 입력 정보 불일치 | name: {}, username: {}, email: {}", name, username, email);
+                    return new UserNotFoundException(" 일치하는 회원 정보를 찾을 수 없습니다.");
+                });
     }
 }

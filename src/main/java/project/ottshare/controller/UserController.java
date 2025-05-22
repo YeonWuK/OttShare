@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import project.ottshare.dto.userDto.*;
 import project.ottshare.security.auth.CustomUserDetails;
 import project.ottshare.security.auth.JwtTokenProvider;
+import project.ottshare.service.EmailService;
 import project.ottshare.service.TokenBlacklistService;
 import project.ottshare.service.UserService;
 import project.ottshare.validation.CustomValidators;
@@ -35,6 +36,7 @@ public class UserController {
     private final CustomValidators validators;
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenBlacklistService tokenBlacklistService;
+    private final EmailService emailService;
 
     /**
      * 회원가입
@@ -113,7 +115,9 @@ public class UserController {
         String temporaryPassword = PasswordGenerator.generatePassword(10);
         userService.updatePassword(dto.getName(), dto.getUsername(), dto.getEmail(), temporaryPassword);
 
-        return ResponseEntity.ok("임시 비밀번호는 " + temporaryPassword + "입니다.");
+        emailService.send(dto.getEmail(), temporaryPassword);
+
+        return ResponseEntity.ok("임시 비밀번호가 이메일로 전송되었습니다.");
     }
 
     private ResponseEntity<?> buildValidationErrorResponse(BindingResult bindingResult) {
