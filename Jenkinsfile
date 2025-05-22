@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        ENV_FILE = "${WORKSPACE}/.env"
+    }
+
     stages {
         stage('Git Checkout') {
             steps {
@@ -17,10 +21,10 @@ pipeline {
                   --name "/ottshare/env" \
                   --with-decryption \
                   --query "Parameter.Value" \
-                  --output text > .env
+                  --output text > $WORKSPACE/.env
 
                 set -o allexport
-                source .env
+                source $WORKSPACE/.env
                 set +o allexport
                 '''
             }
