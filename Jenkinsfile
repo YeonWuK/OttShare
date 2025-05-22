@@ -9,6 +9,23 @@ pipeline {
             }
         }
 
+        stage('Load .env from SSM') {
+            steps {
+                echo "🔐 AWS SSM에서 .env 다운로드 중..."
+                sh '''
+                aws ssm get-parameter \
+                  --name "/ottshare/env" \
+                  --with-decryption \
+                  --query "Parameter.Value" \
+                  --output text > .env
+
+                set -o allexport
+                source .env
+                set +o allexport
+                '''
+            }
+        }
+
         stage('Docker Compose Build & Deploy') {
             steps {
                 echo "🐳 Docker Compose 다운 → 빌드 → 재기동..."
