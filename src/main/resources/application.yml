@@ -32,18 +32,22 @@ spring:
     exchange:
       name: ${SPRING_RABBITMQ_EXCHANGE_NAME}
 
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.actuate.autoconfigure.metrics.MetricsAutoConfiguration
-
   mail:
     host: ${MAIL_HOST}
     port: ${MAIL_PORT}
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
+    protocol: ${MAIL_PROTOCOL}
     properties:
-      mail.smtp.auth: ${MAIL_PROPERTIES_MAIL_SMTP_AUTH}
-      mail.smtp.starttls.enable: ${MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE}
+      mail:
+        smtp:
+          auth: ${MAIL_PROPERTIES_MAIL_SMTP_AUTH}
+          starttls:
+            enable: ${MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE}
+
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.actuate.autoconfigure.metrics.MetricsAutoConfiguration
 
 server:
   port: 8080
