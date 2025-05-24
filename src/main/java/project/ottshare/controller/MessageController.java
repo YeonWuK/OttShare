@@ -37,6 +37,6 @@ public class MessageController {
         Long user_id = customUserDetails.userId();
 
         sharingUserService.is_sharingUser(user_id);
-        rabbitMqService.sendMessage("chat.exchange", message, room_id, user_id);
+        rabbitMqService.sendMessage("chat.exchange", message.getMessage(), room_id, user_id);
     }
 }
