@@ -1,5 +1,6 @@
 package project.ottshare.controller;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -92,5 +93,17 @@ public class OttShareRoomController {
         OttShareRoomResponseDto roomIdAndPassword = ottShareRoomService.getRoomIdAndPassword(sharingUserByUserId.getOttShareRoomId(), userId);
 
         return ResponseEntity.ok().body(roomIdAndPassword);
+    }
+
+    /**
+     * 새로운 맴버 찾기
+     */
+    @GetMapping("{room-id}/findNewMember")
+    public ResponseEntity<?> findNewMember(@PathVariable("room-id") Long roomId) {
+        log.info("Fetching New Member for room ID: {}", roomId);
+        boolean newMemberFound = ottShareRoomService.findNewMember(roomId);
+        String message = newMemberFound ? "새로운 멤버를 찾았습니다" : "새로운 멤버를 찾지 못 했습니다";
+
+        return ResponseEntity.ok().body(message);
     }
 }

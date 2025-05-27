@@ -37,6 +37,7 @@ public class DistributeLockAop {
         try {
             boolean available = rLock.tryLock(distributeLock.waitTime(), distributeLock.leaseTime(), distributeLock.timeUnit());
             if (!available) {
+                log.info("Lock acquisition fail, key:{}", key);
                 return false;
             }
 
@@ -48,6 +49,7 @@ public class DistributeLockAop {
             throw new InterruptedException();
         }
         finally {
+            log.info("unlock success {}" , key);
             rLock.unlock();
         }
     }

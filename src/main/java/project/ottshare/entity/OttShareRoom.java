@@ -71,4 +71,9 @@ public class OttShareRoom extends BaseTimeEntity{
         sharingUsers.remove(sharingUser);
         sharingUser.setOttShareRoom(null); // ✅ 관계 해제 (JPA가 변경 감지)
     }
+
+    public void addSharingUser(SharingUser sharingUser) {
+        sharingUsers.add(sharingUser);
+        sharingUser.setOttShareRoom(this);
+    }
 }

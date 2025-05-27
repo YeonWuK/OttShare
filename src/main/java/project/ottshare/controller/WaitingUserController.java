@@ -38,7 +38,8 @@ public class WaitingUserController {
 
     /**
      *  ShareRoom 생성
-     */    @PostMapping
+     */
+    @PostMapping
     public ResponseEntity<String> createOttShareRoom(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                                      @RequestBody WaitingUserRequestDto waitingUserRequestDTO) throws Exception {
         log.info("✅ isLeader Value: {}", waitingUserRequestDTO.isLeader());

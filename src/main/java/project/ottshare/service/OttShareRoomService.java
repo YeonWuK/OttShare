@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.ottshare.aop.DistributeLock;
 import project.ottshare.dto.ottShareRoomDto.OttShareRoomRequestDto;
 import project.ottshare.dto.ottShareRoomDto.OttShareRoomResponseDto;
 import project.ottshare.dto.sharingUserDto.SharingUserResponseDto;
@@ -11,6 +12,7 @@ import project.ottshare.dto.waitingUserDto.WaitingUserResponseDto;
 import project.ottshare.entity.OttShareRoom;
 import project.ottshare.entity.SharingUser;
 import project.ottshare.entity.User;
+import project.ottshare.entity.WaitingUser;
 import project.ottshare.enums.OttType;
 import project.ottshare.exception.OttSharingRoomNotFoundException;
 import project.ottshare.exception.SharingUserNotCheckedException;
@@ -18,6 +20,8 @@ import project.ottshare.exception.UserNotFoundException;
 import project.ottshare.repository.OttShareRoomRepository;
 import project.ottshare.repository.SharingUserRepository;
 import project.ottshare.repository.UserRepository;
+import project.ottshare.repository.WaitingUserRepository;
+import project.ottshare.repository.custom.WaitingUserRepositoryCustomImpl;
 
 import java.util.List;
 import java.util.Map;
@@ -29,8 +33,10 @@ import java.util.Map;
 public class OttShareRoomService {
     private final OttShareRoomRepository ottShareRoomRepository;
     private final SharingUserRepository sharingUserRepository;
+    private final WaitingUserRepository waitingUserRepository;
     private final SharingUserService sharingUserService;
     private final UserRepository userRepository;
+    private final WaitingUserRepositoryCustomImpl waitingUserRepositoryCustomImpl;
 
     /**
      * WaitingUserResponseDTO -> OttShareRoomRequestDTO 변환
@@ -158,6 +164,29 @@ public class OttShareRoomService {
     /**
      * 새로운 맴버 찾기
      */
+    @DistributeLock(key = "#roomId")
+    @Transactional
+    public boolean findNewMember(Long roomId) {
+        OttShareRoom ottShareRoom = ottShareRoomRepository.findById(roomId)
+                .orElseThrow(() -> new OttSharingRoomNotFoundException("존재하지 않는 방입니다. roomId :"+ roomId));
+
+        OttType ottType = ottShareRoom.getOttType();
+        List<WaitingUser> newNonLeader = waitingUserRepositoryCustomImpl.findNonLeaderByOtt(ottType, 1);
+
+        if (!newNonLeader.isEmpty()) {
+            WaitingUser waitingUser = newNonLeader.get(0);
+            SharingUser newSharingUser = SharingUser.from(waitingUser, ottShareRoom);
+
+            ottShareRoom.addSharingUser(newSharingUser);
+            waitingUserRepository.delete(waitingUser);
+
+            log.info("Added new member to room ID: {}", roomId);
+            return true;  // 멤버를 찾은 경우 true 반환
+
+        }
+        log.warn("Not find new member to room ID: {}", roomId);
+        return false;
+    }
 
 
     /**
